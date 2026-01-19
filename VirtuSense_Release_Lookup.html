@@ -1,0 +1,1820 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VirtuSense Release Lookup</title>
+  <style>
+    :root {
+      --bg-primary: #f8fafc;
+      --bg-secondary: #ffffff;
+      --bg-tertiary: #f1f5f9;
+      --text-primary: #1e293b;
+      --text-secondary: #64748b;
+      --text-muted: #94a3b8;
+      --border-color: #e2e8f0;
+      --accent-primary: #6366f1;
+      --accent-hover: #4f46e5;
+      --accent-light: #eef2ff;
+      --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+      --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -2px rgba(0,0,0,0.1);
+      --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -4px rgba(0,0,0,0.1);
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 16px;
+      --transition: all 0.2s ease;
+    }
+
+    [data-theme="dark"] {
+      --bg-primary: #0f172a;
+      --bg-secondary: #1e293b;
+      --bg-tertiary: #334155;
+      --text-primary: #f1f5f9;
+      --text-secondary: #94a3b8;
+      --text-muted: #64748b;
+      --border-color: #334155;
+      --accent-light: #312e81;
+      --shadow-sm: 0 1px 2px rgba(0,0,0,0.3);
+      --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.4);
+      --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.5);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      min-height: 100vh;
+      transition: var(--transition);
+    }
+
+    /* Header */
+    .header {
+      background: var(--bg-secondary);
+      border-bottom: 1px solid var(--border-color);
+      padding: 16px 24px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(10px);
+    }
+
+    .header-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo-icon {
+      width: 46px;
+      height: 46px;
+      background: linear-gradient(135deg, var(--accent-primary), #8b5cf6);
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+    }
+
+    .logo h1 {
+      font-size: 24px;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--accent-primary), #8b5cf6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .theme-toggle {
+      width: 48px;
+      height: 48px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-color);
+      background: var(--bg-tertiary);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      transition: var(--transition);
+    }
+
+    .theme-toggle:hover {
+      background: var(--accent-light);
+      border-color: var(--accent-primary);
+    }
+
+    .export-btn {
+      padding: 12px 20px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-color);
+      background: var(--bg-tertiary);
+      color: var(--text-primary);
+      cursor: pointer;
+      font-size: 15px;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: var(--transition);
+    }
+
+    .export-btn:hover {
+      background: var(--accent-light);
+      border-color: var(--accent-primary);
+      color: var(--accent-primary);
+    }
+
+    /* Main Container */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+
+    /* Search Section */
+    .search-section {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      margin-bottom: 24px;
+    }
+
+    .search-container {
+      position: relative;
+    }
+
+    .search-input-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 18px;
+      color: var(--text-muted);
+      font-size: 20px;
+    }
+
+    #searchInput {
+      width: 100%;
+      padding: 20px 20px 20px 56px;
+      font-size: 18px;
+      border: 2px solid var(--border-color);
+      border-radius: var(--radius-md);
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      transition: var(--transition);
+    }
+
+    #searchInput:focus {
+      outline: none;
+      border-color: var(--accent-primary);
+      box-shadow: 0 0 0 4px var(--accent-light);
+    }
+
+    #searchInput::placeholder {
+      color: var(--text-muted);
+    }
+
+    .search-hint {
+      margin-top: 14px;
+      font-size: 14px;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      flex-wrap: wrap;
+    }
+
+    .search-hint kbd {
+      background: var(--bg-tertiary);
+      padding: 3px 10px;
+      border-radius: 4px;
+      font-size: 13px;
+      border: 1px solid var(--border-color);
+    }
+
+    /* Suggestions Dropdown */
+    .suggestions {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      margin-top: 8px;
+      max-height: 400px;
+      overflow-y: auto;
+      display: none;
+      box-shadow: var(--shadow-lg);
+      z-index: 50;
+    }
+
+    .suggestions.active {
+      display: block;
+      animation: slideDown 0.2s ease;
+    }
+
+    @keyframes slideDown {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .suggestion-item {
+      padding: 16px 18px;
+      cursor: pointer;
+      border-bottom: 1px solid var(--border-color);
+      transition: var(--transition);
+    }
+
+    .suggestion-item:last-child {
+      border-bottom: none;
+    }
+
+    .suggestion-item:hover,
+    .suggestion-item.selected {
+      background: var(--accent-light);
+    }
+
+    .suggestion-release {
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 15px;
+      color: var(--text-primary);
+      margin-bottom: 6px;
+    }
+
+    .suggestion-release mark {
+      background: #fef08a;
+      color: #854d0e;
+      padding: 1px 2px;
+      border-radius: 2px;
+    }
+
+    [data-theme="dark"] .suggestion-release mark {
+      background: #854d0e;
+      color: #fef9c3;
+    }
+
+    .suggestion-meta {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 14px;
+      color: var(--text-secondary);
+    }
+
+    /* Recent Searches */
+    .recent-searches {
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border-color);
+    }
+
+    .recent-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .clear-all-btn {
+      background: none;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      padding: 6px 12px;
+      font-size: 12px;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .clear-all-btn:hover {
+      background: #fee2e2;
+      border-color: #ef4444;
+      color: #dc2626;
+    }
+
+    [data-theme="dark"] .clear-all-btn:hover {
+      background: #7f1d1d;
+      border-color: #ef4444;
+      color: #fca5a5;
+    }
+
+    .recent-items {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      max-height: 220px;
+      overflow-y: auto;
+    }
+
+    .recent-item {
+      padding: 12px 16px;
+      background: var(--bg-tertiary);
+      border-radius: var(--radius-sm);
+      font-size: 14px;
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .recent-item:hover {
+      background: var(--accent-light);
+      color: var(--accent-primary);
+    }
+
+    .recent-item .remove {
+      opacity: 0;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+
+    .recent-item:hover .remove {
+      opacity: 1;
+    }
+
+    /* Release Card */
+    .release-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 28px;
+      margin-bottom: 24px;
+      display: none;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .release-card.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .release-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+      flex-wrap: wrap;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--border-color);
+      margin-bottom: 24px;
+    }
+
+    .release-title {
+      flex: 1;
+    }
+
+    .release-version-wrapper {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+    }
+
+    .release-version {
+      font-size: 26px;
+      font-weight: 600;
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      color: var(--text-primary);
+      word-break: break-all;
+      line-height: 1.4;
+    }
+
+    .release-string-label {
+      font-size: 32px;
+      font-weight: 700;
+      color: var(--text-secondary);
+    }
+
+    .release-string-label span {
+      color: var(--accent-primary);
+    }
+
+    .copy-btn {
+      padding: 12px 18px;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      background: var(--bg-secondary);
+      color: var(--text-secondary);
+      cursor: pointer;
+      font-size: 15px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: var(--transition);
+    }
+
+    .copy-btn:hover {
+      background: var(--accent-light);
+      border-color: var(--accent-primary);
+      color: var(--accent-primary);
+    }
+
+    .copy-btn.copied {
+      background: #dcfce7;
+      border-color: #22c55e;
+      color: #16a34a;
+    }
+
+    [data-theme="dark"] .copy-btn.copied {
+      background: #14532d;
+      border-color: #22c55e;
+      color: #4ade80;
+    }
+
+    .release-badges {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .badge {
+      padding: 12px 20px;
+      border-radius: 24px;
+      font-size: 16px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .badge-main { background: #dcfce7; color: #166534; }
+    .badge-greengrass { background: #d1fae5; color: #065f46; }
+    .badge-pressure-injury { background: #fee2e2; color: #991b1b; }
+    .badge-sentry { background: #fef3c7; color: #92400e; }
+    .badge-rgb { background: #ede9fe; color: #5b21b6; }
+    .badge-nkd { background: #fef9c3; color: #854d0e; }
+    .badge-virtual-nursing { background: #dcfce7; color: #166534; }
+    .badge-bed-segmentation { background: #cffafe; color: #155e75; }
+    .badge-uhs { background: #fce7f3; color: #9d174d; }
+    .badge-bugfix { background: #f3f4f6; color: #374151; }
+    .badge-other { background: #f1f5f9; color: #475569; }
+    .badge-q1 { background: #dbeafe; color: #1e40af; border: 1px solid #93c5fd; }
+
+    [data-theme="dark"] .badge-main { background: #14532d; color: #86efac; }
+    [data-theme="dark"] .badge-greengrass { background: #064e3b; color: #6ee7b7; }
+    [data-theme="dark"] .badge-pressure-injury { background: #7f1d1d; color: #fca5a5; }
+    [data-theme="dark"] .badge-sentry { background: #78350f; color: #fcd34d; }
+    [data-theme="dark"] .badge-rgb { background: #4c1d95; color: #c4b5fd; }
+    [data-theme="dark"] .badge-nkd { background: #713f12; color: #fde047; }
+    [data-theme="dark"] .badge-virtual-nursing { background: #14532d; color: #86efac; }
+    [data-theme="dark"] .badge-bed-segmentation { background: #164e63; color: #67e8f9; }
+    [data-theme="dark"] .badge-uhs { background: #831843; color: #f9a8d4; }
+    [data-theme="dark"] .badge-bugfix { background: #374151; color: #d1d5db; }
+    [data-theme="dark"] .badge-other { background: #334155; color: #94a3b8; }
+    [data-theme="dark"] .badge-q1 { background: #1e3a8a; color: #93c5fd; }
+
+    .release-info {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .info-card {
+      background: var(--bg-tertiary);
+      padding: 22px;
+      border-radius: var(--radius-md);
+    }
+
+    .info-label {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 10px;
+    }
+
+    .info-value {
+      font-size: 26px;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .notes-box {
+      background: linear-gradient(135deg, #fef9c3 0%, #fef3c7 100%);
+      border-left: 4px solid #f59e0b;
+      padding: 18px;
+      border-radius: 0 var(--radius-md) var(--radius-md) 0;
+      margin-bottom: 24px;
+      display: none;
+    }
+
+    .notes-box.active {
+      display: block;
+    }
+
+    [data-theme="dark"] .notes-box {
+      background: linear-gradient(135deg, #78350f 0%, #713f12 100%);
+    }
+
+    .notes-label {
+      font-size: 15px;
+      font-weight: 700;
+      color: #92400e;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    [data-theme="dark"] .notes-label {
+      color: #fcd34d;
+    }
+
+    .notes-text {
+      font-size: 18px;
+      color: #78350f;
+      line-height: 1.6;
+    }
+
+    [data-theme="dark"] .notes-text {
+      color: #fef3c7;
+    }
+
+    /* Connections Section */
+    .connections-section {
+      background: var(--bg-tertiary);
+      border-radius: var(--radius-md);
+      padding: 26px;
+      margin-bottom: 24px;
+      display: none;
+    }
+
+    .connections-section.active {
+      display: block;
+    }
+
+    .connections-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--text-primary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 18px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .connections-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+    }
+
+    .connection-group {
+      background: var(--bg-secondary);
+      border-radius: var(--radius-md);
+      padding: 20px;
+      border: 1px solid var(--border-color);
+    }
+
+    .connection-type {
+      font-size: 14px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .connection-type.parent { color: #8b5cf6; }
+    .connection-type.children { color: #22c55e; }
+    .connection-type.merged-into { color: #06b6d4; }
+
+    .connection-items {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .connection-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 16px 18px;
+      background: var(--bg-tertiary);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: var(--transition);
+      border: 1px solid transparent;
+      flex-wrap: wrap;
+    }
+
+    .connection-item:hover {
+      background: var(--accent-light);
+      border-color: var(--accent-primary);
+    }
+
+    .connection-arrow {
+      font-size: 20px;
+      color: var(--text-muted);
+      flex-shrink: 0;
+    }
+
+    .connection-version {
+      font-weight: 600;
+      font-size: 15px;
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      color: var(--text-primary);
+      flex: 1;
+      min-width: 0;
+      word-break: break-all;
+    }
+
+    .connection-feature {
+      font-size: 13px;
+      padding: 5px 12px;
+      border-radius: 12px;
+      background: var(--bg-secondary);
+      color: var(--text-secondary);
+      flex-shrink: 0;
+    }
+
+    .no-connections-msg {
+      color: var(--text-muted);
+      font-size: 15px;
+      font-style: italic;
+    }
+
+    .wiki-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      padding: 18px 32px;
+      background: var(--accent-primary);
+      color: white;
+      text-decoration: none;
+      border-radius: var(--radius-md);
+      font-weight: 600;
+      font-size: 17px;
+      transition: var(--transition);
+    }
+
+    .wiki-link:hover {
+      background: var(--accent-hover);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .wiki-link.disabled {
+      background: var(--bg-tertiary);
+      color: var(--text-muted);
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+
+    /* All Releases Section */
+    .releases-section {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+    }
+
+    .releases-header {
+      padding: 20px 24px;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .releases-title {
+      font-size: 26px;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .filter-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .filter-btn {
+      padding: 12px 18px;
+      border: 1px solid var(--border-color);
+      border-radius: 24px;
+      background: var(--bg-secondary);
+      color: var(--text-secondary);
+      cursor: pointer;
+      font-size: 15px;
+      font-weight: 500;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .filter-btn:hover {
+      background: var(--bg-tertiary);
+    }
+
+    .filter-btn.active {
+      background: var(--accent-primary);
+      color: white;
+      border-color: var(--accent-primary);
+    }
+
+    .filter-count {
+      background: rgba(255,255,255,0.2);
+      padding: 2px 8px;
+      border-radius: 10px;
+      font-size: 11px;
+    }
+
+    .filter-btn:not(.active) .filter-count {
+      background: var(--bg-tertiary);
+    }
+
+    .release-list {
+      max-height: 600px;
+      overflow-y: auto;
+    }
+
+    .sprint-group {
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .sprint-group:last-child {
+      border-bottom: none;
+    }
+
+    .sprint-header {
+      padding: 18px 24px;
+      background: var(--bg-tertiary);
+      font-size: 17px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: var(--transition);
+      position: sticky;
+      top: 0;
+      z-index: 5;
+    }
+
+    .sprint-header:hover {
+      background: var(--accent-light);
+    }
+
+    .sprint-header .arrow {
+      transition: var(--transition);
+    }
+
+    .sprint-header.collapsed .arrow {
+      transform: rotate(-90deg);
+    }
+
+    .sprint-releases {
+      transition: var(--transition);
+    }
+
+    .sprint-releases.collapsed {
+      display: none;
+    }
+
+    .release-list-item {
+      padding: 16px 24px;
+      cursor: pointer;
+      border-bottom: 1px solid var(--border-color);
+      transition: var(--transition);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .release-list-item:last-child {
+      border-bottom: none;
+    }
+
+    .release-list-item:hover {
+      background: var(--accent-light);
+    }
+
+    .release-list-item.selected {
+      background: var(--accent-light);
+      border-left: 3px solid var(--accent-primary);
+    }
+
+    .release-item-main {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .release-item-string {
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 15px;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .release-item-meta {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .release-item-version {
+      font-size: 17px;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+
+    .release-item-badges {
+      display: flex;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+
+    .mini-badge {
+      padding: 6px 14px;
+      border-radius: 14px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .release-item-note {
+      font-size: 14px;
+      color: var(--text-muted);
+      margin-top: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* No Result */
+    .no-result {
+      text-align: center;
+      padding: 70px 24px;
+      display: none;
+    }
+
+    .no-result.active {
+      display: block;
+    }
+
+    .no-result-icon {
+      font-size: 56px;
+      margin-bottom: 18px;
+    }
+
+    .no-result-text {
+      font-size: 18px;
+      color: var(--text-secondary);
+    }
+
+    /* Toast Notification */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      padding: 16px 24px;
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-lg);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 15px;
+      z-index: 1000;
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.3s ease;
+    }
+
+    .toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .toast-success {
+      border-left: 4px solid #22c55e;
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: var(--bg-tertiary);
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--text-muted);
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--text-secondary);
+    }
+
+    /* Mobile Responsive */
+    @media (max-width: 768px) {
+      .header-content {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .logo {
+        justify-content: center;
+      }
+
+      .header-actions {
+        justify-content: center;
+      }
+
+      .release-header {
+        flex-direction: column;
+      }
+
+      .filter-buttons {
+        justify-content: center;
+      }
+
+      .release-list-item {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .release-item-badges {
+        margin-top: 8px;
+      }
+
+      .connections-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="header-content">
+      <div class="logo">
+        <div class="logo-icon">🔍</div>
+        <h1>VirtuSense Release Lookup</h1>
+      </div>
+      <div class="header-actions">
+        <button class="export-btn" onclick="exportToCSV()">
+          <span>📥</span> Export CSV
+        </button>
+        <button class="theme-toggle" onclick="toggleTheme()" title="Toggle dark mode">
+          <span id="themeIcon">🌙</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <!-- Search Section -->
+    <div class="search-section">
+      <div class="search-container">
+        <div class="search-input-wrapper">
+          <span class="search-icon">🔍</span>
+          <input type="text" id="searchInput" placeholder="Search by release string or version..." autocomplete="off">
+        </div>
+        <div class="suggestions" id="suggestions"></div>
+      </div>
+      <div class="search-hint">
+        <span><kbd>↑</kbd> <kbd>↓</kbd> Navigate</span>
+        <span><kbd>Enter</kbd> Select</span>
+        <span><kbd>Esc</kbd> Close</span>
+      </div>
+      <div class="recent-searches" id="recentSearches" style="display: none;">
+        <div class="recent-title">
+          <span>Recent Searches</span>
+          <button class="clear-all-btn" onclick="clearAllRecent()" title="Clear all recent searches">🗑️ Clear All</button>
+        </div>
+        <div class="recent-items" id="recentItems"></div>
+      </div>
+    </div>
+
+    <!-- No Result -->
+    <div class="no-result" id="noResult">
+      <div class="no-result-icon">🔎</div>
+      <div class="no-result-text">No release found. Try another search term.</div>
+    </div>
+
+    <!-- Release Card - NOW ABOVE All Releases -->
+    <div class="release-card" id="releaseCard">
+      <div class="release-header">
+        <div class="release-title">
+          <div class="release-version-wrapper">
+            <span class="release-version" id="releaseVersion">-</span>
+            <button class="copy-btn" onclick="copyReleaseString()">
+              <span id="copyIcon">📋</span>
+              <span id="copyText">Copy</span>
+            </button>
+          </div>
+          <div class="release-string-label">Version: <span id="releaseString">-</span></div>
+        </div>
+        <div class="release-badges" id="releaseBadges"></div>
+      </div>
+
+      <div class="notes-box" id="notesBox">
+        <div class="notes-label">📝 NOTES</div>
+        <div class="notes-text" id="releaseNotes">-</div>
+      </div>
+
+      <div class="release-info">
+        <div class="info-card">
+          <div class="info-label">Sprint</div>
+          <div class="info-value" id="releaseSprint">-</div>
+        </div>
+        <div class="info-card">
+          <div class="info-label">Date</div>
+          <div class="info-value" id="releaseDate">-</div>
+        </div>
+      </div>
+
+      <!-- Connections Section -->
+      <div class="connections-section" id="connectionsSection">
+        <div class="connections-title">🔗 Release Connections</div>
+        <div class="connections-grid" id="connectionsGrid"></div>
+      </div>
+
+      <a class="wiki-link" id="wikiLink" href="#" target="_blank">
+        <span>📄</span> View Full Documentation
+      </a>
+    </div>
+
+    <!-- All Releases -->
+    <div class="releases-section">
+      <div class="releases-header">
+        <h2 class="releases-title">All Releases <span id="releaseCount" style="color: var(--text-muted); font-weight: 400;">(0)</span></h2>
+        <div class="filter-buttons" id="filterButtons"></div>
+      </div>
+      <div class="release-list" id="releaseList"></div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast toast-success" id="toast">
+    <span>✓</span>
+    <span id="toastMessage">Copied to clipboard!</span>
+  </div>
+
+  <script>
+    // ╔════════════════════════════════════════════════════════════════════════════════════════════╗
+    // ║  RELEASE DATA WITH CONNECTIONS                                                              ║
+    // ║  parent: version this was branched from                                                     ║
+    // ║  children: versions branched from this                                                      ║
+    // ║  mergedInto: version this was merged into                                                   ║
+    // ╚════════════════════════════════════════════════════════════════════════════════════════════╝
+
+    const releases = {
+      // === SPRINT 66 ===
+      "v2024-03Mar-13-590cb1da-b942f58a-nuc": { version: "5.0.2", feature: "Main", sprint: "66", notes: "", q1: false, link: "", parent: "", children: ["5.8.0"], mergedInto: "" },
+      "v2024-03Mar-25-9834b0cf-651fb300-nuc": { version: "5.8.0", feature: "Main", sprint: "66", notes: "", q1: false, link: "", parent: "5.0.2", children: ["5.8.1"], mergedInto: "" },
+      "v2024-03Mar-29-9834b0cf-d4c2c460-nuc": { version: "5.8.1", feature: "Main", sprint: "66", notes: "", q1: false, link: "", parent: "5.8.0", children: ["5.9.0", "5.7.2"], mergedInto: "" },
+
+      // === SPRINT 67 ===
+      "v2024-04Apr-05-78147094-400ee5c6-nuc": { version: "5.9.0", feature: "Main", sprint: "67", notes: "", q1: false, link: "", parent: "5.8.1", children: ["5.9.1", "5.9.0-disconnected_fix_4"], mergedInto: "" },
+      "v2024-04Apr-05-f2967d3d-5b56039a-nuc": { version: "5.7.2", feature: "Main", sprint: "67", notes: "", q1: false, link: "", parent: "5.8.1", children: ["5.7.3"], mergedInto: "" },
+      "v2024-04Apr-12-25326949-400ee5c6": { version: "5.9.1", feature: "Main", sprint: "67", notes: "", q1: false, link: "", parent: "5.9.0", children: ["5.9.2"], mergedInto: "" },
+      "v2024-04Apr-15-2f45bc35-5b56039a-nuc": { version: "5.7.3", feature: "Main", sprint: "67", notes: "", q1: false, link: "", parent: "5.7.2", children: [], mergedInto: "" },
+      "v2024-04Apr-19-6dcc2825-f0706937-nuc": { version: "5.9.2", feature: "Main", sprint: "67", notes: "", q1: false, link: "", parent: "5.9.1", children: ["5.9.3"], mergedInto: "" },
+
+      // === SPRINT 68 ===
+      "v2024-04Apr-30-1742b281-e207bd9e-nuc": { version: "5.9.3", feature: "Main", sprint: "68", notes: "", q1: false, link: "", parent: "5.9.2", children: ["5.9.4", "5.9.5"], mergedInto: "" },
+
+      // === SPRINT 69 ===
+      "v2024-05May-15-78147094-071ae56d-nuc": { version: "5.9.0-disconnected_fix_4", feature: "Bug Fix", sprint: "69", notes: "", q1: false, link: "", parent: "5.9.0", children: [], mergedInto: "" },
+      "v2024-05May-15-0c660191-8641e051-nuc": { version: "5.9.5", feature: "Main", sprint: "69", notes: "", q1: false, link: "", parent: "5.9.3", children: [], mergedInto: "" },
+      "v2024-05May-15-0762655b-66fd9283-nuc": { version: "5.9.4", feature: "Main", sprint: "69", notes: "", q1: false, link: "", parent: "5.9.3", children: ["5.9.4-tone_change", "5.9.4-greengrass", "5.9.4-SD_read_only_fix"], mergedInto: "" },
+
+      // === SPRINT 70 ===
+      "v2024-05May-29-c88633bf-dcc69704-nuc": { version: "5.70.0", feature: "Main", sprint: "70", notes: "", q1: false, link: "", parent: "", children: ["5.70.1"], mergedInto: "" },
+      "v2024-05May-30-25251635-dcc69704-nuc": { version: "5.70.1", feature: "Main", sprint: "70", notes: "", q1: false, link: "", parent: "5.70.0", children: ["5.70.2"], mergedInto: "" },
+
+      // === SPRINT 71 ===
+      "2024-06Jun-07-8df8c0c1-dcc69704-nuc": { version: "5.70.2", feature: "Main", sprint: "71", notes: "", q1: false, link: "", parent: "5.70.1", children: ["5.70.3"], mergedInto: "" },
+      "2024-06Jun-10-674eca76-dcc69704-nuc": { version: "5.70.3", feature: "Main", sprint: "71", notes: "", q1: false, link: "", parent: "5.70.2", children: [], mergedInto: "" },
+      "2024-06Jun-11-0762655b-24b61890-nuc": { version: "5.9.4-SD_read_only_fix", feature: "Bug Fix", sprint: "71", notes: "", q1: false, link: "", parent: "5.9.4", children: ["5.9.4-SD_read_only_fix-1"], mergedInto: "" },
+      "v2024-06Jun-11-bb469064-48eecbaf-nuc": { version: "5.71.0", feature: "Main", sprint: "71", notes: "", q1: false, link: "", parent: "", children: ["5.71.1"], mergedInto: "" },
+      "v2024-06Jun-14-f1f2bdb9-48eecbaf-nuc": { version: "5.71.1", feature: "Main", sprint: "71", notes: "", q1: false, link: "", parent: "5.71.0", children: ["5.71.2"], mergedInto: "" },
+
+      // === SPRINT 72 ===
+      "v2024-06Jun-19-e9c09cd0-48eecbaf-nuc": { version: "5.71.2", feature: "Main", sprint: "72", notes: "", q1: false, link: "", parent: "5.71.1", children: [], mergedInto: "" },
+      "v2024-06Jun-25-6f7c3a53-ef104a83-nuc": { version: "5.72.0", feature: "Main", sprint: "72", notes: "", q1: false, link: "", parent: "", children: ["5.72.1"], mergedInto: "" },
+      "v2024-06Jun-27-d4717257-ef104a83-nuc": { version: "5.72.1", feature: "Main", sprint: "72", notes: "", q1: false, link: "", parent: "5.72.0", children: [], mergedInto: "" },
+
+      // === SPRINT 73 ===
+      "v2024-07Jul-02-7245cbf3-66fd9283-nuc": { version: "5.9.4-tone_change", feature: "Bug Fix", sprint: "73", notes: "Change the default notification light tone", q1: false, link: "", parent: "5.9.4", children: [], mergedInto: "" },
+      "v2024-07Jul-11-4029acbf-32ef0f5d-nuc": { version: "5.73.0", feature: "Main", sprint: "73", notes: "", q1: false, link: "", parent: "", children: ["5.73.1"], mergedInto: "" },
+
+      // === SPRINT 74 ===
+      "v2024-07Jul-18-4d630a0a-f68b0b60-nuc": { version: "5.73.1", feature: "Main", sprint: "74", notes: "", q1: false, link: "", parent: "5.73.0", children: [], mergedInto: "" },
+      "v2024-07Jul-25-06093272-c410d0cb-nuc": { version: "5.74.0", feature: "Main", sprint: "74", notes: "", q1: false, link: "", parent: "", children: ["5.74.1", "5.74.0-vstalertgo"], mergedInto: "" },
+      "v2024-07Jul-26-0762655b-fd6b49e8-nuc": { version: "5.9.4-greengrass", feature: "Greengrass", sprint: "74", notes: "", q1: false, link: "", parent: "5.9.4", children: ["5.9.4-greengrass1"], mergedInto: "" },
+
+      // === SPRINT 75 ===
+      "v2024-07Jul-30-6d8a0782-bd50b8f3-nuc": { version: "5.74.1", feature: "Main", sprint: "75", notes: "Potential fix for Signal 6/11 error", q1: false, link: "", parent: "5.74.0", children: ["5.74.1-gg", "5.75.0"], mergedInto: "" },
+      "v2024-08Aug-01-81a8cc76-865ea72f-nuc": { version: "5.74.0-vstalertgo", feature: "Other", sprint: "75", notes: "", q1: false, link: "", parent: "5.74.0", children: [], mergedInto: "" },
+      "v2024-08Aug-02-0762655b-fd6b49e8-nuc": { version: "5.9.4-greengrass1", feature: "Greengrass", sprint: "75", notes: "", q1: false, link: "", parent: "5.9.4-greengrass", children: [], mergedInto: "" },
+      "v2024-08Aug-08-c2d27a02-174e24b3-nuc": { version: "5.75.0", feature: "Main", sprint: "75", notes: "", q1: false, link: "", parent: "5.74.1", children: ["5.75.1"], mergedInto: "" },
+      "v2024-08Aug-12-1ebfc055-494008a1-nuc": { version: "5.75.1", feature: "Main", sprint: "75", notes: "", q1: false, link: "", parent: "5.75.0", children: ["5.76.0"], mergedInto: "" },
+
+      // === SPRINT 76 ===
+      "v2024-08Aug-13-6d8a0782-bd50b8f3-nuc": { version: "5.74.1-gg", feature: "Greengrass", sprint: "76", notes: "", q1: false, link: "", parent: "5.74.1", children: [], mergedInto: "" },
+      "v2024-08Aug-22-1da3c834-5277bd0c-nuc": { version: "5.76.0", feature: "Main", sprint: "76", notes: "", q1: false, link: "", parent: "5.75.1", children: ["5.76.1"], mergedInto: "" },
+      "v2024-08Aug-22-91d8b738-5277bd0c-nuc": { version: "5.76.1", feature: "Main", sprint: "76", notes: "Bed Segmentation reverted", q1: false, link: "", parent: "5.76.0", children: ["5.76.2"], mergedInto: "" },
+
+      // === SPRINT 77 ===
+      "v2024-09Sep-04-f565a6bc-a207b4af-nuc": { version: "5.77.0", feature: "Main", sprint: "77", notes: "", q1: false, link: "", parent: "", children: ["5.78.0"], mergedInto: "" },
+      "v2024-09Sep-06-84c73b95-5277bd0c-nuc": { version: "5.76.2", feature: "Main", sprint: "77", notes: "", q1: false, link: "", parent: "5.76.1", children: ["5.76.3"], mergedInto: "" },
+
+      // === SPRINT 78 ===
+      "v2024-09Sep-16-e19bff0d-5277bd0c-nuc": { version: "5.76.3", feature: "Main", sprint: "78", notes: "Exceptions with old file deletion, Dash videos getting written", q1: false, link: "", parent: "5.76.2", children: ["5.76.3-nkd1", "5.76.4"], mergedInto: "" },
+      "v2024-09Sep-18-2ff551d8-5cf9bead-nuc": { version: "5.78.0", feature: "Main", sprint: "78", notes: "", q1: false, link: "", parent: "5.77.0", children: ["5.79.0"], mergedInto: "" },
+
+      // === SPRINT 79 ===
+      "v2024-09Sep-25-6986a275-abe7ad9e-nuc": { version: "5.76.3-nkd1", feature: "NKD", sprint: "79", notes: "", q1: false, link: "", parent: "5.76.3", children: ["5.76.3-nkd2"], mergedInto: "" },
+      "v2024-09Sep-27-d64a104c-abe7ad9e-nuc": { version: "5.76.3-nkd2", feature: "NKD", sprint: "79", notes: "", q1: false, link: "", parent: "5.76.3-nkd1", children: ["5.76.3-nkd3"], mergedInto: "" },
+      "v2024-09Sep-30-0851f7ba-5277bd0c-nuc": { version: "5.76.4", feature: "Main", sprint: "79", notes: "", q1: false, link: "", parent: "5.76.3", children: ["5.76.5"], mergedInto: "" },
+      "v2024-10Oct-03-b5f00565-6ca2f3d9-nuc": { version: "5.79.0", feature: "Main", sprint: "79", notes: "", q1: false, link: "", parent: "5.78.0", children: ["5.79.1"], mergedInto: "" },
+      "v2024-10Oct-03-a600a0e6-70585398-nuc": { version: "5.79.1", feature: "Main", sprint: "79", notes: "", q1: false, link: "", parent: "5.79.0", children: ["5.80.0"], mergedInto: "" },
+
+      // === SPRINT 80 ===
+      "v2024-10Oct-09-b1afc0dc-550e97aa-nuc": { version: "NUC13 System Image TBD", feature: "Other", sprint: "80", notes: "", q1: false, link: "", parent: "", children: [], mergedInto: "" },
+      "v2024-10Oct-09-ed4a411a-5277bd0c-nuc": { version: "5.76.5", feature: "Main", sprint: "80", notes: "dash videos deletion - merged in 5.80.0", q1: false, link: "", parent: "5.76.4", children: [], mergedInto: "5.80.0" },
+      "v2024-10Oct-21-f3b60087-bfe2df56-nuc": { version: "5.80.0", feature: "Main", sprint: "80", notes: "dash videos deletion merged in 5.80.0", q1: false, link: "", parent: "5.79.1", children: ["5.80.0-gg", "5.81.0"], mergedInto: "" },
+
+      // === SPRINT 81 ===
+      "v2024-10Oct-29-f3b60087-bfe2df56-nuc": { version: "5.80.0-gg", feature: "Greengrass", sprint: "81", notes: "", q1: false, link: "", parent: "5.80.0", children: [], mergedInto: "" },
+      "v2024-10Oct-31-709cfff2-bc242c8d-nuc": { version: "5.81.0", feature: "Main", sprint: "81", notes: "", q1: false, link: "", parent: "5.80.0", children: ["5.82.0"], mergedInto: "" },
+
+      // === SPRINT 82 ===
+      "v2024-11Nov-08-d64a104c-58fb82fd-nuc": { version: "5.76.3-nkd3", feature: "NKD", sprint: "82", notes: "chromium spawning fix - merged in 5.82.1", q1: false, link: "", parent: "5.76.3-nkd2", children: ["5.76.3-nkd4", "5.76.3-nkd3-1"], mergedInto: "5.82.1" },
+      "v2024-11Nov-12-d64a104c-34596c19-nuc": { version: "5.76.3-nkd4", feature: "NKD", sprint: "82", notes: "unmute speaker and microphone - merged in 5.82.1", q1: false, link: "", parent: "5.76.3-nkd3", children: [], mergedInto: "5.82.1" },
+      "v2024-11Nov-18-98682826-f8e75041-nuc": { version: "5.82.0", feature: "Main", sprint: "82", notes: "", q1: false, link: "", parent: "5.81.0", children: ["5.82.1"], mergedInto: "" },
+      "v2024-11Nov-19-98682826-dd6568dc-nuc": { version: "5.82.1", feature: "Main", sprint: "82", notes: "chromium spawning fix merged; unmute speaker and microphone merged", q1: false, link: "", parent: "5.82.0", children: ["5.83.0"], mergedInto: "" },
+
+      // === SPRINT 83 ===
+      "v2024-11Nov-27-146c0ff4-dae1102e-nuc": { version: "5.83.0", feature: "Main", sprint: "83", notes: "", q1: false, link: "", parent: "5.82.1", children: ["5.83.1"], mergedInto: "" },
+
+      // === SPRINT 85 ===
+      "v2024-12Dec-18-b55e711e-4d308e5d-nuc": { version: "5.83.1", feature: "Main", sprint: "85", notes: "NUC 13 fixes - merged in 5.85.0", q1: false, link: "", parent: "5.83.0", children: ["5.83.1-RGB_data_collection", "5.83.2"], mergedInto: "5.85.0" },
+      "v2024-12Dec-23-c002f0aa-fc0c813d-nuc": { version: "5.85.0", feature: "Main", sprint: "85", notes: "NUC 13 fixes merged in 5.85.0", q1: false, link: "", parent: "5.83.1", children: ["5.86.0"], mergedInto: "" },
+      "v2024-12Dec-23-6053c9fd-58fb82fd-nuc": { version: "5.76.3-nkd3-1", feature: "NKD", sprint: "85", notes: "", q1: false, link: "", parent: "5.76.3-nkd3", children: [], mergedInto: "" },
+
+      // === SPRINT 86 ===
+      "v2025-01Jan-08-4e3418e6-cbb65adf-nuc": { version: "5.86.0", feature: "Main", sprint: "86", notes: "", q1: false, link: "", parent: "5.85.0", children: ["5.86.1"], mergedInto: "" },
+
+      // === SPRINT 87 ===
+      "v2025-01Jan-14-de9c65ec-fc0c813d-nuc": { version: "Carespring diagnostic release", feature: "Other", sprint: "87", notes: "", q1: false, link: "", parent: "", children: [], mergedInto: "" },
+      "v2025-01Jan-27-4e3418e6-907dff05-nuc": { version: "5.86.1", feature: "Main", sprint: "87", notes: "", q1: false, link: "", parent: "5.86.0", children: ["5.86.2", "5.87.0"], mergedInto: "" },
+      "v2025-01Jan-28-71dd9e46-7bd0cd5c-nuc": { version: "5.87.0", feature: "Main", sprint: "87", notes: "", q1: false, link: "", parent: "5.86.1", children: ["5.88.0"], mergedInto: "" },
+
+      // === SPRINT 88 ===
+      "v2025-02Feb-10-10a213ca-dc4ff6be-nuc": { version: "5.86.2", feature: "Main", sprint: "88", notes: "Pressure injury patch for NUC8/11", q1: false, link: "", parent: "5.86.1", children: ["5.86.3"], mergedInto: "" },
+      "v2025-02Feb-13-5151cbe7-869f8b09-nuc": { version: "5.88.0", feature: "Main", sprint: "88", notes: "Pressure Injury patch for NUC13", q1: false, link: "", parent: "5.87.0", children: ["5.89.0"], mergedInto: "" },
+
+      // === SPRINT 89 ===
+      "v2025-02Feb-17-2dc3e09e-dc4ff6be-nuc": { version: "5.86.3", feature: "Main", sprint: "89", notes: "", q1: false, link: "", parent: "5.86.2", children: ["5.86.4"], mergedInto: "" },
+      "v2025-02Feb-18-fbe2492d-dc4ff6be-nuc": { version: "5.86.4", feature: "Main", sprint: "89", notes: "", q1: false, link: "", parent: "5.86.3", children: ["5.86.5"], mergedInto: "" },
+      "v2025-02Feb-21-6aac9515-dc4ff6be-nuc": { version: "5.86.5", feature: "Main", sprint: "89", notes: "", q1: false, link: "", parent: "5.86.4", children: ["5.86.6"], mergedInto: "" },
+      "v2025-02Feb-24-937ad053-bb376059-nuc": { version: "5.89.0", feature: "Main", sprint: "89", notes: "", q1: false, link: "", parent: "5.88.0", children: ["5.90.0"], mergedInto: "" },
+      "v2025-02Feb-24-46066775-dc4ff6be-nuc": { version: "5.86.6", feature: "Greengrass", sprint: "89", notes: "NKD (Handle TOUCH_FAIL)", q1: false, link: "", parent: "5.86.5", children: ["5.86.6-sentry", "5.86.7"], mergedInto: "" },
+      "v2025-02Feb-25-77f88283-dc4ff6be-nuc": { version: "5.86.6-sentry", feature: "Sentry", sprint: "89", notes: "", q1: false, link: "", parent: "5.86.6", children: [], mergedInto: "" },
+
+      // === SPRINT 90 ===
+      "v2025-03Mar-03-3f89f9cf-4d308e5d-nuc": { version: "5.83.2", feature: "Main", sprint: "90", notes: "", q1: false, link: "", parent: "5.83.1", children: [], mergedInto: "" },
+      "v2025-03Mar-03-53f5f36c-24b61890-nuc": { version: "5.9.4-SD_read_only_fix-1", feature: "Bug Fix", sprint: "90", notes: "", q1: false, link: "", parent: "5.9.4-SD_read_only_fix", children: [], mergedInto: "" },
+      "v2025-03Mar-10-0fa4aa4d-72fdd3c8-nuc": { version: "5.90.0", feature: "Main", sprint: "90", notes: "", q1: false, link: "", parent: "5.89.0", children: ["5.90.1"], mergedInto: "" },
+
+      // === SPRINT 91 ===
+      "v2025-03Mar-18-50cae9d2-72fdd3c8-nuc": { version: "5.90.1", feature: "Main", sprint: "91", notes: "", q1: false, link: "", parent: "5.90.0", children: ["5.91.0"], mergedInto: "" },
+      "v2025-03Mar-24-ce9ac0cc-245e077d-nuc": { version: "5.91.0", feature: "Main", sprint: "91", notes: "", q1: false, link: "", parent: "5.90.1", children: ["5.91.1", "5.92.0"], mergedInto: "" },
+      "v2025-03Mar-26-dce3e624-5c44b37a-nuc": { version: "5.86.7", feature: "Greengrass", sprint: "91", notes: "", q1: false, link: "", parent: "5.86.6", children: [], mergedInto: "" },
+
+      // === SPRINT 92 ===
+      "v2025-04Apr-09-95c5708c-8861c630-nuc": { version: "5.92.0", feature: "Main", sprint: "92", notes: "", q1: false, link: "", parent: "5.91.0", children: [], mergedInto: "" },
+
+      // === SPRINT 94 ===
+      "v2025-04Apr-24-85fb31a3-bc59454c-nuc": { version: "5.91.1", feature: "Main", sprint: "94", notes: "", q1: false, link: "", parent: "5.91.0", children: ["5.91.2"], mergedInto: "" },
+      "v2025-04Apr-29-7323c07a-bc59454c-nuc": { version: "5.91.2", feature: "Main", sprint: "94", notes: "", q1: false, link: "", parent: "5.91.1", children: ["5.91.2-pressure-injury-1", "5.91.3", "5.94.0"], mergedInto: "" },
+      "v2025-05May-02-1c46df4a-bc59454c-nuc": { version: "5.94.0", feature: "Main", sprint: "94", notes: "NKD (Handle TOUCH_FAIL); Fix TOUCH fail request strings", q1: false, link: "", parent: "5.91.2", children: ["5.94.0-sentry", "5.94.1"], mergedInto: "" },
+      "v2025-05May-02-7ca14f7f-a6d4d227-nuc": { version: "5.94.0-sentry", feature: "Sentry", sprint: "94", notes: "", q1: false, link: "", parent: "5.94.0", children: [], mergedInto: "" },
+      "v2025-05May-05-67cf7540-bc59454c-nuc": { version: "5.91.2-pressure-injury-1", feature: "Pressure Injury", sprint: "94", notes: "Pressure Injury patch", q1: false, link: "", parent: "5.91.2", children: ["5.91.2-pressure-injury-2"], mergedInto: "" },
+
+      // === SPRINT 95 ===
+      "v2025-05May-09-0571f48f-bc59454c-nuc": { version: "5.94.1", feature: "Main", sprint: "95", notes: "", q1: false, link: "", parent: "5.94.0", children: ["5.94.2"], mergedInto: "" },
+      "v2025-05May-12-68024a0a-bc59454c-nuc": { version: "5.94.2", feature: "Main", sprint: "95", notes: "", q1: false, link: "", parent: "5.94.1", children: ["5.94.3"], mergedInto: "" },
+      "v2025-05May-14-a5335072-bc59454c-nuc": { version: "5.94.3", feature: "Main", sprint: "95", notes: "", q1: false, link: "", parent: "5.94.2", children: [], mergedInto: "" },
+      "v2025-05May-16-3e4c8601-bc59454c-nuc": { version: "5.91.2-pressure-injury-2", feature: "Pressure Injury", sprint: "95", notes: "Pressure Injury patch with dash video fix", q1: false, link: "", parent: "5.91.2-pressure-injury-1", children: [], mergedInto: "" },
+      "v2025-05May-21-86baf27c-bc59454c-nuc": { version: "5.91.3", feature: "Main", sprint: "95", notes: "", q1: false, link: "", parent: "5.91.2", children: ["5.91.4"], mergedInto: "" },
+      "v2025-05May-28-361a4b99-4d308e5d-nuc": { version: "5.83.1-RGB_data_collection", feature: "RGB Data", sprint: "95", notes: "", q1: false, link: "", parent: "5.83.1", children: ["5.83.1-RGB_data_collection-2"], mergedInto: "" },
+      "v2025-05May-29-e497bef7-bc59454c-nuc": { version: "5.91.4", feature: "Main", sprint: "95", notes: "", q1: false, link: "", parent: "5.91.3", children: ["5.91.4-pressure-injury-1", "5.91.5"], mergedInto: "" },
+      "v2025-05May-29-f006cc53-bc59454c-nuc": { version: "5.95.0", feature: "Main", sprint: "95", notes: "", q1: false, link: "", parent: "", children: ["5.97.0"], mergedInto: "" },
+
+      // === SPRINT 97 ===
+      "v2025-06Jun-02-8f209d5d-199a38c4-nuc": { version: "5.91.4-pressure-injury-1", feature: "Pressure Injury", sprint: "97", notes: "", q1: false, link: "", parent: "5.91.4", children: ["5.91.4-pressure-injury-2"], mergedInto: "" },
+      "v2025-06Jun-09-5ce34b9d-bc59454c-nuc": { version: "5.91.4-pressure-injury-2", feature: "Pressure Injury", sprint: "97", notes: "", q1: false, link: "", parent: "5.91.4-pressure-injury-1", children: ["5.91.4-pressure-injury-3"], mergedInto: "" },
+      "v2025-06Jun-09-a43596d1-723f15ea-nuc": { version: "5.91.4-pressure-injury-3", feature: "Pressure Injury", sprint: "97", notes: "", q1: false, link: "", parent: "5.91.4-pressure-injury-2", children: ["5.91.4-pressure-injury-4"], mergedInto: "" },
+      "v2025-06Jun-11-6c109891-bc59454c-nuc": { version: "5.91.5", feature: "Main", sprint: "97", notes: "", q1: false, link: "", parent: "5.91.4", children: ["5.91.6"], mergedInto: "" },
+      "v2025-06Jun-12-c43d90be-723f15ea-nuc": { version: "5.91.4-pressure-injury-4", feature: "Pressure Injury", sprint: "97", notes: "", q1: false, link: "", parent: "5.91.4-pressure-injury-3", children: ["5.91.4-pressure-injury-5"], mergedInto: "" },
+      "v2025-06Jun-17-89a9cb48-42931514-nuc": { version: "5.97.0", feature: "Main", sprint: "97", notes: "", q1: false, link: "", parent: "5.95.0", children: ["5.98.0"], mergedInto: "" },
+      "v2025-06Jun-17-8db3d6f0-723f15ea-nuc": { version: "5.91.4-pressure-injury-5", feature: "Pressure Injury", sprint: "97", notes: "", q1: false, link: "", parent: "5.91.4-pressure-injury-4", children: ["5.91.4-pressure-injury-6"], mergedInto: "" },
+
+      // === SPRINT 98 ===
+      "v2025-06Jun-19-af130701-4d308e5d-nuc": { version: "5.83.1-RGB_data_collection-2", feature: "RGB Data", sprint: "98", notes: "", q1: false, link: "", parent: "5.83.1-RGB_data_collection", children: ["5.83.1-RGB_data_collection-3"], mergedInto: "" },
+      "v2025-06Jun-19-17c6ef42-a6d4d227-nuc": { version: "5.98.0-sentry", feature: "Sentry", sprint: "98", notes: "", q1: false, link: "", parent: "", children: ["5.98.1-sentry"], mergedInto: "" },
+      "v2025-06Jun-24-4f3b6cc3-723f15ea-nuc": { version: "5.91.4-pressure-injury-6", feature: "Pressure Injury", sprint: "98", notes: "Pressure Injury patch", q1: false, link: "", parent: "5.91.4-pressure-injury-5", children: ["5.91.4-pressure-injury-6dc", "5.91.4-pressure-injury-7"], mergedInto: "" },
+      "v2025-06Jun-27-655313b4-42931514-nuc": { version: "5.98.1-sentry", feature: "Sentry", sprint: "98", notes: "", q1: false, link: "", parent: "5.98.0-sentry", children: [], mergedInto: "" },
+      "v2025-06Jun-30-3b1bc4aa-723f15ea-nuc": { version: "5.91.4-pressure-injury-6dc", feature: "Pressure Injury", sprint: "98", notes: "Pressure Injury patch with dash video fix", q1: false, link: "", parent: "5.91.4-pressure-injury-6", children: [], mergedInto: "" },
+
+      // === SPRINT 99 ===
+      "v2025-07Jul-02-e61d0976-bc59454c-nuc": { version: "5.91.6", feature: "Main", sprint: "99", notes: "", q1: false, link: "", parent: "5.91.5", children: ["5.91.6-NKD", "5.91.7"], mergedInto: "" },
+      "v2025-07Jul-03-03159614-4d308e5d-nuc": { version: "5.83.1-RGB_data_collection-3", feature: "RGB Data", sprint: "99", notes: "", q1: false, link: "", parent: "5.83.1-RGB_data_collection-2", children: [], mergedInto: "" },
+      "v2025-07Jul-08-60cbcd35-bb010f4b-nuc": { version: "5.99.1-sentry", feature: "Sentry", sprint: "99", notes: "", q1: false, link: "", parent: "", children: [], mergedInto: "" },
+      "v2025-07Jul-10-9f754616-2a3dd553-nuc": { version: "5.98.0", feature: "Main", sprint: "99", notes: "", q1: false, link: "", parent: "5.97.0", children: ["5.100.0"], mergedInto: "" },
+      "v2025-07Jul-10-cf729371-42931514-nuc": { version: "5.91.6-NKD", feature: "NKD", sprint: "99", notes: "", q1: false, link: "", parent: "5.91.6", children: ["5.91.6-NKD-1"], mergedInto: "" },
+      "v2025-07Jul-15-f6be2b7c-42931514-nuc": { version: "5.91.6-NKD-1", feature: "NKD", sprint: "99", notes: "", q1: false, link: "", parent: "5.91.6-NKD", children: [], mergedInto: "" },
+      "v2025-07Jul-17-affbc88b-42931514-nuc": { version: "5.99.0-sentry", feature: "Sentry", sprint: "99", notes: "", q1: false, link: "", parent: "", children: [], mergedInto: "" },
+
+      // === SPRINT 100 ===
+      "v2025-07Jul-23-2b89c156-bc59454c-nuc": { version: "5.91.7", feature: "Main", sprint: "100", notes: "", q1: true, link: "", parent: "5.91.6", children: ["5.91.7-bed-segmentation", "5.91.7-virtual-nursing", "5.91.8", "5.91.7-UHS", "5.91.7-NKD-1"], mergedInto: "" },
+      "v2025-07Jul-28-94043c58-723f15ea-nuc": { version: "5.91.4-pressure-injury-7", feature: "Pressure Injury", sprint: "100", notes: "", q1: false, link: "", parent: "5.91.4-pressure-injury-6", children: ["5.91.4-pressure-injury-8"], mergedInto: "" },
+      "v2025-07Jul-31-d9dcb468-2a3dd553-nuc": { version: "5.100.0", feature: "Main", sprint: "100", notes: "", q1: false, link: "", parent: "5.98.0", children: ["5.105.0"], mergedInto: "" },
+
+      // === SPRINT 101 ===
+      "v2025-08Aug-01-7d511e7d-bc59454c-nuc": { version: "5.91.7-bed-segmentation", feature: "Bed Segmentation", sprint: "101", notes: "", q1: false, link: "", parent: "5.91.7", children: ["5.91.7-bed-segmentation-1"], mergedInto: "" },
+      "v2025-08Aug-06-56766854-bc59454c-nuc": { version: "5.91.7-bed-segmentation-1", feature: "Bed Segmentation", sprint: "101", notes: "", q1: true, link: "", parent: "5.91.7-bed-segmentation", children: ["5.91.7-bed-segmentation-2"], mergedInto: "" },
+
+      // === SPRINT 102 ===
+      "v2025-08Aug-22-ee26a1c8-bc59454c-nuc": { version: "5.91.8", feature: "Main", sprint: "102", notes: "", q1: false, link: "", parent: "5.91.7", children: [], mergedInto: "" },
+      "v2025-08Aug-25-e3241079-b7eafb39-nuc": { version: "5.91.7-virtual-nursing", feature: "Virtual Nursing", sprint: "102", notes: "", q1: true, link: "", parent: "5.91.7", children: ["5.91.7-virtual-nursing-UHS"], mergedInto: "" },
+
+      // === SPRINT 104 ===
+      "v2025-09Sep-05-bfc658cb-723f15ea-nuc": { version: "5.91.4-pressure-injury-8", feature: "Pressure Injury", sprint: "104", notes: "", q1: false, link: "", parent: "5.91.4-pressure-injury-7", children: [], mergedInto: "" },
+      "v2025-09Sep-18-81552b9f-bc59454c-nuc": { version: "5.91.7-bed-segmentation-2", feature: "Bed Segmentation", sprint: "104", notes: "", q1: true, link: "", parent: "5.91.7-bed-segmentation-1", children: ["5.91.7-bed-segmentation-3"], mergedInto: "" },
+
+      // === SPRINT 105 ===
+      "v2025-09Sep-25-85e0d05f-bc59454c-nuc": { version: "5.91.7-UHS", feature: "UHS", sprint: "105", notes: "", q1: true, link: "", parent: "5.91.7", children: ["5.91.7-UHS-diag", "5.91.7-UHS-BNL"], mergedInto: "" },
+      "v2025-09Sep-25-6d49bbf4-b7eafb39-nuc": { version: "5.91.7-virtual-nursing-UHS", feature: "Virtual Nursing", sprint: "105", notes: "", q1: true, link: "", parent: "5.91.7-virtual-nursing", children: ["5.91.7-virtual-nursing-UHS-1"], mergedInto: "" },
+      "v2025-09Sep-25-606edc81-723f15ea-nuc": { version: "PI+", feature: "Pressure Injury", sprint: "105", notes: "", q1: true, link: "", parent: "", children: ["5.91.7-pressure-injury-UHS"], mergedInto: "" },
+      "v2025-09Sep-25-947f076d-bc59454c-nuc": { version: "5.91.7-bed-segmentation-3", feature: "Bed Segmentation", sprint: "105", notes: "", q1: true, link: "", parent: "5.91.7-bed-segmentation-2", children: ["5.91.7-bed-segmentation-4"], mergedInto: "" },
+      "v2025-10Oct-02-aeb4dfdf-5d519832-nuc": { version: "5.105.0", feature: "Main", sprint: "105", notes: "", q1: false, link: "", parent: "5.100.0", children: ["5.106.0"], mergedInto: "" },
+
+      // === SPRINT 106 ===
+      "v2025-10Oct-10-97096dcb-bc59454c-nuc": { version: "5.91.7-NKD-1", feature: "NKD", sprint: "106", notes: "", q1: false, link: "", parent: "5.91.7", children: ["5.91.7-NKD-2"], mergedInto: "" },
+      "v2025-10Oct-13-a7ba4d41-bc59454c-nuc": { version: "5.91.7-NKD-2", feature: "NKD", sprint: "106", notes: "", q1: false, link: "", parent: "5.91.7-NKD-1", children: [], mergedInto: "" },
+      "v2025-10Oct-13-06803626-723f15ea-nuc": { version: "5.91.7-pressure-injury-UHS", feature: "Pressure Injury", sprint: "106", notes: "", q1: true, link: "", parent: "PI+", children: [], mergedInto: "" },
+      "v2025-10Oct-17-6d49bbf4-18a5ec0d-nuc": { version: "5.91.7-virtual-nursing-UHS-1", feature: "Virtual Nursing", sprint: "106", notes: "", q1: false, link: "", parent: "5.91.7-virtual-nursing-UHS", children: ["5.91.7-virtual-nursing-UHS-2"], mergedInto: "" },
+      "v2025-10Oct-23-a1aee88c-6c0f44db-nuc": { version: "5.106.0-sentry", feature: "Sentry", sprint: "106", notes: "", q1: false, link: "", parent: "", children: [], mergedInto: "" },
+      "v2025-10Oct-29-f464d293-5c891014-nuc": { version: "5.106.0", feature: "Main", sprint: "106", notes: "", q1: false, link: "", parent: "5.105.0", children: ["5.107.0"], mergedInto: "" },
+
+      // === SPRINT 107 ===
+      "v2025-10Oct-31-5fd1fc70-e7b90f1e-nuc": { version: "5.107.0", feature: "Main", sprint: "107", notes: "", q1: false, link: "", parent: "5.106.0", children: ["5.107.1"], mergedInto: "" },
+      "v2025-11Nov-04-c3b66c6e-2de0008a-nuc": { version: "5.91.7-virtual-nursing-UHS-2", feature: "Virtual Nursing", sprint: "107", notes: "", q1: true, link: "", parent: "5.91.7-virtual-nursing-UHS-1", children: ["5.91.7-virtual-nursing-UHS-3"], mergedInto: "" },
+      "v2025-11Nov-05-21c45212-13935b33-nuc": { version: "5.107.1", feature: "Main", sprint: "107", notes: "", q1: false, link: "", parent: "5.107.0", children: ["5.107.2"], mergedInto: "" },
+      "v2025-11Nov-05-ce2bcfd0-2de0008a-nuc": { version: "5.91.7-virtual-nursing-UHS-3", feature: "Virtual Nursing", sprint: "107", notes: "", q1: true, link: "", parent: "5.91.7-virtual-nursing-UHS-2", children: ["5.91.7-virtual-nursing-UHS-BNL"], mergedInto: "" },
+
+      // === SPRINT 108 ===
+      "v2025-11Nov-06-b658fd8d-13935b33-nuc": { version: "5.107.2", feature: "Main", sprint: "108", notes: "", q1: false, link: "", parent: "5.107.1", children: ["5.107.3"], mergedInto: "" },
+      "v2025-11Nov-07-33ffbe47-13935b33-nuc": { version: "5.107.3", feature: "Main", sprint: "108", notes: "", q1: false, link: "", parent: "5.107.2", children: ["5.107.4"], mergedInto: "" },
+      "v2025-11Nov-10-c6b01eec-13935b33-nuc": { version: "5.107.4", feature: "Main", sprint: "108", notes: "", q1: false, link: "", parent: "5.107.3", children: ["5.107.5"], mergedInto: "" },
+      "v2025-11Nov-11-6e547f71-e99c2a62-nuc": { version: "5.107.5", feature: "Main", sprint: "108", notes: "", q1: false, link: "", parent: "5.107.4", children: ["5.107.6"], mergedInto: "" },
+      "v2025-11Nov-12-7b7205f1-e99c2a62-nuc": { version: "5.107.6", feature: "Main", sprint: "108", notes: "", q1: false, link: "", parent: "5.107.5", children: ["5.107.7"], mergedInto: "" },
+
+      // === SPRINT 109 ===
+      "v2025-11Nov-16-647e0c47-cf46acd9-nuc": { version: "5.107.7", feature: "Main", sprint: "109", notes: "", q1: false, link: "", parent: "5.107.6", children: ["5.107.8"], mergedInto: "" },
+      "v2025-11Nov-18-1fdbaebf-bc59454c-nuc": { version: "5.91.7-UHS-diag", feature: "UHS", sprint: "109", notes: "", q1: false, link: "", parent: "5.91.7-UHS", children: [], mergedInto: "" },
+      "v2025-11Nov-18-dac9d935-bc59454c-nuc": { version: "5.91.7-bed-segmentation-4", feature: "Bed Segmentation", sprint: "109", notes: "", q1: true, link: "", parent: "5.91.7-bed-segmentation-3", children: [], mergedInto: "" },
+      "v2025-11Nov-19-edc8273f-2d059309-nuc": { version: "5.107.8", feature: "Main", sprint: "109", notes: "", q1: false, link: "", parent: "5.107.7", children: ["5.107.9"], mergedInto: "" },
+      "v2025-11Nov-21-1041b941-bc59454c-nuc": { version: "5.91.7-virtual-nursing-UHS-BNL", feature: "Virtual Nursing", sprint: "109", notes: "", q1: true, link: "", parent: "5.91.7-virtual-nursing-UHS-3", children: [], mergedInto: "" },
+      "v2025-11Nov-21-1988b765-bc59454c-nuc": { version: "5.91.7-UHS-BNL", feature: "UHS", sprint: "109", notes: "", q1: true, link: "", parent: "5.91.7-UHS", children: [], mergedInto: "" },
+      "v2025-11Nov-24-40f010f0-2d059309-nuc": { version: "5.107.9", feature: "Main", sprint: "109", notes: "", q1: false, link: "", parent: "5.107.8", children: ["5.107.10"], mergedInto: "" },
+      "v2025-11Nov-26-9ac80e8a-2d059309-nuc": { version: "5.107.10", feature: "Main", sprint: "109", notes: "", q1: false, link: "", parent: "5.107.9", children: [], mergedInto: "" }
+    };
+
+    // ╔════════════════════════════════════════════════════════════════════════════════════════════╗
+    // ║  END OF RELEASE DATA                                                                        ║
+    // ╚════════════════════════════════════════════════════════════════════════════════════════════╝
+
+    // Feature colors and icons
+    const featureConfig = {
+      "Main": { color: "#22c55e", icon: "🟢" },
+      "Greengrass": { color: "#10b981", icon: "🌿" },
+      "Pressure Injury": { color: "#ef4444", icon: "🔴" },
+      "Sentry": { color: "#f59e0b", icon: "🟡" },
+      "RGB Data": { color: "#8b5cf6", icon: "🟣" },
+      "NKD": { color: "#eab308", icon: "🟠" },
+      "Virtual Nursing": { color: "#22c55e", icon: "💚" },
+      "Bed Segmentation": { color: "#06b6d4", icon: "🔵" },
+      "UHS": { color: "#ec4899", icon: "💗" },
+      "Bug Fix": { color: "#6b7280", icon: "🔧" },
+      "Other": { color: "#94a3b8", icon: "⚪" }
+    };
+
+    // Build version to release string mapping for connections
+    const versionToReleaseString = {};
+    Object.entries(releases).forEach(([releaseStr, data]) => {
+      versionToReleaseString[data.version] = releaseStr;
+    });
+
+    const releaseKeys = Object.keys(releases);
+    let selectedIndex = -1;
+    let recentSearches = JSON.parse(localStorage.getItem('recentSearches') || '[]');
+    let currentFilter = 'all';
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', () => {
+      initFilters();
+      renderReleaseList();
+      renderRecentSearches();
+      
+      const savedTheme = localStorage.getItem('theme') || 'light';
+      document.documentElement.setAttribute('data-theme', savedTheme);
+      document.getElementById('themeIcon').textContent = savedTheme === 'dark' ? '☀️' : '🌙';
+    });
+
+    // Filters
+    function initFilters() {
+      const features = ['all', ...new Set(releaseKeys.map(r => releases[r].feature))];
+      const counts = { all: releaseKeys.length };
+      releaseKeys.forEach(r => {
+        const f = releases[r].feature;
+        counts[f] = (counts[f] || 0) + 1;
+      });
+      
+      const html = features.map(f => {
+        const icon = f === 'all' ? '📋' : (featureConfig[f]?.icon || '⚪');
+        const label = f === 'all' ? 'All' : f;
+        return `<button class="filter-btn ${f === 'all' ? 'active' : ''}" data-filter="${f}" onclick="setFilter('${f}')">
+          <span>${icon}</span> ${label} <span class="filter-count">${counts[f]}</span>
+        </button>`;
+      }).join('');
+      document.getElementById('filterButtons').innerHTML = html;
+    }
+
+    function setFilter(filter) {
+      currentFilter = filter;
+      document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.filter === filter);
+      });
+      renderReleaseList();
+    }
+
+    function filterByFeature(feature) {
+      setFilter(feature);
+    }
+
+    // Release List
+    function renderReleaseList() {
+      const filtered = currentFilter === 'all' 
+        ? releaseKeys 
+        : releaseKeys.filter(r => releases[r].feature === currentFilter);
+      
+      // Group by sprint
+      const sprintGroups = {};
+      filtered.forEach(r => {
+        const sprint = releases[r].sprint;
+        if (!sprintGroups[sprint]) sprintGroups[sprint] = [];
+        sprintGroups[sprint].push(r);
+      });
+      
+      const sortedSprints = Object.keys(sprintGroups).sort((a, b) => parseInt(b) - parseInt(a));
+      
+      const html = sortedSprints.map(sprint => {
+        const releasesHtml = sprintGroups[sprint].map(r => {
+          const rel = releases[r];
+          const badgeClass = `badge-${rel.feature.toLowerCase().replace(/ /g, '-')}`;
+          const q1Badge = rel.q1 ? '<span class="mini-badge badge-q1">Q1</span>' : '';
+          const noteHtml = rel.notes ? `<div class="release-item-note">📝 ${rel.notes.substring(0, 50)}${rel.notes.length > 50 ? '...' : ''}</div>` : '';
+          
+          return `<div class="release-list-item" onclick="selectRelease('${r}')">
+            <div class="release-item-main">
+              <div class="release-item-string">${r}</div>
+              <div class="release-item-meta">
+                <span class="release-item-version">${rel.version}</span>
+              </div>
+              ${noteHtml}
+            </div>
+            <div class="release-item-badges">
+              <span class="mini-badge ${badgeClass}">${featureConfig[rel.feature]?.icon || '⚪'} ${rel.feature}</span>
+              ${q1Badge}
+            </div>
+          </div>`;
+        }).join('');
+        
+        return `<div class="sprint-group">
+          <div class="sprint-header" onclick="toggleSprint(this)">
+            <span>Sprint ${sprint} (${sprintGroups[sprint].length} releases)</span>
+            <span class="arrow">▼</span>
+          </div>
+          <div class="sprint-releases">${releasesHtml}</div>
+        </div>`;
+      }).join('');
+      
+      document.getElementById('releaseList').innerHTML = html;
+      document.getElementById('releaseCount').textContent = `(${filtered.length})`;
+    }
+
+    function toggleSprint(header) {
+      header.classList.toggle('collapsed');
+      header.nextElementSibling.classList.toggle('collapsed');
+    }
+
+    // Search
+    const searchInput = document.getElementById('searchInput');
+    const suggestionsDiv = document.getElementById('suggestions');
+
+    searchInput.addEventListener('input', function() {
+      const query = this.value.toLowerCase().trim();
+      selectedIndex = -1;
+      
+      if (query.length < 2) {
+        suggestionsDiv.classList.remove('active');
+        return;
+      }
+      
+      const matches = releaseKeys.filter(r => 
+        r.toLowerCase().includes(query) || 
+        releases[r].version.toLowerCase().includes(query)
+      ).slice(0, 12);
+      
+      if (matches.length > 0) {
+        suggestionsDiv.innerHTML = matches.map((r, i) => {
+          const rel = releases[r];
+          const highlighted = highlightMatch(r, query);
+          const badgeClass = `badge-${rel.feature.toLowerCase().replace(/ /g, '-')}`;
+          const q1Badge = rel.q1 ? '<span class="mini-badge badge-q1">Q1</span>' : '';
+          
+          return `<div class="suggestion-item" data-index="${i}" onclick="selectRelease('${r}')">
+            <div class="suggestion-release">${highlighted}</div>
+            <div class="suggestion-meta">
+              <span class="mini-badge ${badgeClass}">${rel.feature}</span>
+              <span>${rel.version}</span>
+              ${q1Badge}
+              <span>Sprint ${rel.sprint}</span>
+            </div>
+          </div>`;
+        }).join('');
+        suggestionsDiv.classList.add('active');
+      } else {
+        suggestionsDiv.classList.remove('active');
+      }
+    });
+
+    function highlightMatch(text, query) {
+      const regex = new RegExp(`(${query})`, 'gi');
+      return text.replace(regex, '<mark>$1</mark>');
+    }
+
+    // Keyboard navigation
+    searchInput.addEventListener('keydown', function(e) {
+      const items = suggestionsDiv.querySelectorAll('.suggestion-item');
+      
+      if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        selectedIndex = Math.min(selectedIndex + 1, items.length - 1);
+        updateSelection(items);
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        selectedIndex = Math.max(selectedIndex - 1, 0);
+        updateSelection(items);
+      } else if (e.key === 'Enter') {
+        e.preventDefault();
+        if (selectedIndex >= 0 && items[selectedIndex]) {
+          const releaseStr = releaseKeys.find(r => 
+            r.toLowerCase().includes(searchInput.value.toLowerCase()) ||
+            releases[r].version.toLowerCase().includes(searchInput.value.toLowerCase())
+          );
+          if (releaseStr) selectRelease(releaseStr);
+        } else if (searchInput.value.trim()) {
+          const match = releaseKeys.find(r => 
+            r.toLowerCase().includes(searchInput.value.toLowerCase()) ||
+            releases[r].version.toLowerCase().includes(searchInput.value.toLowerCase())
+          );
+          if (match) selectRelease(match);
+        }
+      } else if (e.key === 'Escape') {
+        suggestionsDiv.classList.remove('active');
+        selectedIndex = -1;
+      }
+    });
+
+    function updateSelection(items) {
+      items.forEach((item, i) => {
+        item.classList.toggle('selected', i === selectedIndex);
+        if (i === selectedIndex) item.scrollIntoView({ block: 'nearest' });
+      });
+    }
+
+    // Select Release
+    function selectRelease(releaseString) {
+      const release = releases[releaseString];
+      if (!release) {
+        document.getElementById('noResult').classList.add('active');
+        document.getElementById('releaseCard').classList.remove('active');
+        return;
+      }
+      
+      addRecentSearch(releaseString);
+      
+      document.getElementById('noResult').classList.remove('active');
+      document.getElementById('releaseCard').classList.add('active');
+      
+      searchInput.value = releaseString;
+      suggestionsDiv.classList.remove('active');
+      
+      document.getElementById('releaseVersion').textContent = releaseString;
+      document.getElementById('releaseString').textContent = release.version;
+      document.getElementById('releaseSprint').textContent = `Sprint ${release.sprint}`;
+      document.getElementById('releaseDate').textContent = extractDate(releaseString);
+      
+      // Badges
+      const badgeClass = `badge-${release.feature.toLowerCase().replace(/ /g, '-')}`;
+      let badgesHtml = `<span class="badge ${badgeClass}">${featureConfig[release.feature]?.icon || '⚪'} ${release.feature}</span>`;
+      if (release.q1) badgesHtml += '<span class="badge badge-q1">⭐ Q1</span>';
+      document.getElementById('releaseBadges').innerHTML = badgesHtml;
+      
+      // Notes
+      const notesBox = document.getElementById('notesBox');
+      if (release.notes) {
+        notesBox.classList.add('active');
+        document.getElementById('releaseNotes').textContent = release.notes;
+      } else {
+        notesBox.classList.remove('active');
+      }
+      
+      // Render connections (parent, children, merged)
+      renderConnections(release);
+      
+      // Wiki link
+      const wikiLink = document.getElementById('wikiLink');
+      if (release.link) {
+        wikiLink.href = release.link;
+        wikiLink.classList.remove('disabled');
+        wikiLink.innerHTML = '<span>📄</span> View Full Documentation';
+      } else {
+        wikiLink.href = '#';
+        wikiLink.classList.add('disabled');
+        wikiLink.innerHTML = '<span>📄</span> No Wiki Link Available';
+      }
+      
+      // Highlight in list
+      document.querySelectorAll('.release-list-item').forEach(item => {
+        item.classList.remove('selected');
+        if (item.querySelector('.release-item-string')?.textContent === releaseString) {
+          item.classList.add('selected');
+        }
+      });
+      
+      document.getElementById('releaseCard').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function extractDate(releaseString) {
+      const match = releaseString.match(/v?(\d{4})-(\d{2}\w{3})-(\d{2})/);
+      if (match) return `${match[2]} ${match[3]}, ${match[1]}`;
+      return '-';
+    }
+
+    // Render Connections (Parent, Children, Merged Into)
+    function renderConnections(release) {
+      const connectionsSection = document.getElementById('connectionsSection');
+      const connectionsGrid = document.getElementById('connectionsGrid');
+      
+      const hasConnections = release.parent || (release.children && release.children.length > 0) || release.mergedInto;
+      
+      if (!hasConnections) {
+        connectionsSection.classList.remove('active');
+        return;
+      }
+      
+      connectionsSection.classList.add('active');
+      
+      let html = '';
+      
+      // Parent (Branched From)
+      if (release.parent) {
+        const parentRelStr = versionToReleaseString[release.parent];
+        const parentRel = parentRelStr ? releases[parentRelStr] : null;
+        html += `<div class="connection-group">
+          <div class="connection-type parent">⬆️ Parent (Branched From)</div>
+          <div class="connection-items">
+            ${parentRel ? `<div class="connection-item" onclick="selectRelease('${parentRelStr}')">
+              <span class="connection-arrow">↑</span>
+              <span class="connection-version">${parentRelStr}</span>
+              <span class="connection-feature">${parentRel.feature}</span>
+            </div>` : `<div class="no-connections-msg">${release.parent} (not in database)</div>`}
+          </div>
+        </div>`;
+      }
+      
+      // Children (Branched Into)
+      if (release.children && release.children.length > 0) {
+        const childrenHtml = release.children.map(childVersion => {
+          const childRelStr = versionToReleaseString[childVersion];
+          const childRel = childRelStr ? releases[childRelStr] : null;
+          if (childRel) {
+            return `<div class="connection-item" onclick="selectRelease('${childRelStr}')">
+              <span class="connection-arrow">↓</span>
+              <span class="connection-version">${childRelStr}</span>
+              <span class="connection-feature">${childRel.feature}</span>
+            </div>`;
+          }
+          return `<div class="connection-item" style="opacity: 0.5;">
+            <span class="connection-arrow">↓</span>
+            <span class="connection-version">${childVersion}</span>
+          </div>`;
+        }).join('');
+        
+        html += `<div class="connection-group">
+          <div class="connection-type children">⬇️ Children (Branched Into)</div>
+          <div class="connection-items">${childrenHtml}</div>
+        </div>`;
+      }
+      
+      // Merged Into
+      if (release.mergedInto) {
+        const mergedRelStr = versionToReleaseString[release.mergedInto];
+        const mergedRel = mergedRelStr ? releases[mergedRelStr] : null;
+        html += `<div class="connection-group">
+          <div class="connection-type merged-into">🔀 Merged Into</div>
+          <div class="connection-items">
+            ${mergedRel ? `<div class="connection-item" onclick="selectRelease('${mergedRelStr}')">
+              <span class="connection-arrow">→</span>
+              <span class="connection-version">${mergedRelStr}</span>
+              <span class="connection-feature">${mergedRel.feature}</span>
+            </div>` : `<div class="no-connections-msg">${release.mergedInto}</div>`}
+          </div>
+        </div>`;
+      }
+      
+      connectionsGrid.innerHTML = html;
+    }
+
+    // Copy functionality
+    function copyReleaseString() {
+      const text = document.getElementById('releaseVersion').textContent;
+      navigator.clipboard.writeText(text).then(() => {
+        const btn = document.querySelector('.copy-btn');
+        btn.classList.add('copied');
+        document.getElementById('copyIcon').textContent = '✓';
+        document.getElementById('copyText').textContent = 'Copied!';
+        showToast('Copied to clipboard!');
+        
+        setTimeout(() => {
+          btn.classList.remove('copied');
+          document.getElementById('copyIcon').textContent = '📋';
+          document.getElementById('copyText').textContent = 'Copy';
+        }, 2000);
+      });
+    }
+
+    // Recent searches
+    function addRecentSearch(releaseString) {
+      recentSearches = recentSearches.filter(s => s !== releaseString);
+      recentSearches.unshift(releaseString);
+      recentSearches = recentSearches.slice(0, 5);
+      localStorage.setItem('recentSearches', JSON.stringify(recentSearches));
+      renderRecentSearches();
+    }
+
+    function renderRecentSearches() {
+      const container = document.getElementById('recentSearches');
+      const itemsContainer = document.getElementById('recentItems');
+      
+      if (recentSearches.length === 0) {
+        container.style.display = 'none';
+        return;
+      }
+      
+      container.style.display = 'block';
+      itemsContainer.innerHTML = recentSearches.map(s => {
+        return `<div class="recent-item" onclick="selectRelease('${s}')">
+          <span>${s}</span>
+          <span class="remove" onclick="event.stopPropagation(); removeRecent('${s}')">×</span>
+        </div>`;
+      }).join('');
+    }
+
+    function removeRecent(releaseString) {
+      recentSearches = recentSearches.filter(s => s !== releaseString);
+      localStorage.setItem('recentSearches', JSON.stringify(recentSearches));
+      renderRecentSearches();
+    }
+
+    function clearAllRecent() {
+      recentSearches = [];
+      localStorage.setItem('recentSearches', JSON.stringify(recentSearches));
+      renderRecentSearches();
+      showToast('All recent searches cleared!');
+    }
+
+    // Theme toggle
+    function toggleTheme() {
+      const html = document.documentElement;
+      const current = html.getAttribute('data-theme');
+      const next = current === 'dark' ? 'light' : 'dark';
+      html.setAttribute('data-theme', next);
+      localStorage.setItem('theme', next);
+      document.getElementById('themeIcon').textContent = next === 'dark' ? '☀️' : '🌙';
+    }
+
+    // Export to CSV
+    function exportToCSV() {
+      const filtered = currentFilter === 'all' 
+        ? releaseKeys 
+        : releaseKeys.filter(r => releases[r].feature === currentFilter);
+      
+      const headers = ['Release String', 'Version', 'Feature', 'Sprint', 'Q1', 'Parent', 'Children', 'Merged Into', 'Notes', 'Link'];
+      const rows = filtered.map(r => {
+        const rel = releases[r];
+        return [r, rel.version, rel.feature, rel.sprint, rel.q1 ? 'Yes' : 'No', rel.parent, (rel.children || []).join('; '), rel.mergedInto, rel.notes, rel.link];
+      });
+      
+      const csv = [headers, ...rows].map(row => 
+        row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(',')
+      ).join('\n');
+      
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `virtusense-releases-${currentFilter}-${new Date().toISOString().split('T')[0]}.csv`;
+      a.click();
+      URL.revokeObjectURL(url);
+      showToast('CSV exported successfully!');
+    }
+
+    // Toast
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      document.getElementById('toastMessage').textContent = message;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 3000);
+    }
+
+    // Close suggestions on outside click
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('.search-container')) {
+        suggestionsDiv.classList.remove('active');
+      }
+    });
+  </script>
+</body>
+</html>
